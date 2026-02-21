@@ -1,111 +1,199 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText, MapPin, ExternalLink, Github } from 'lucide-react';
-import SpotlightCard from '@/components/ui/SpotlightCard';
-import { StatusBadge } from '@/components/ui/Badge';
-import { TechPill } from '@/components/ui/TechPill';
-import MagneticButton from '@/components/ui/MagneticButton';
-import ThemeToggle from '@/components/ui/ThemeToggle';
-import { personalInfo, projects } from '@/lib/portfolio-data';
+import { Github, FileText, ArrowUpRight, Activity, Terminal, CheckCircle2, Database } from 'lucide-react';
+import { personalInfo, projects, skills, engineeringFocus } from '@/lib/portfolio-data';
 
 export default function Portfolio() {
-  const stagger = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-  const springUp = { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } } };
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
 
   return (
-    <main id="main-content" className="min-h-screen relative overflow-hidden">
+    <main className="relative mx-auto w-full overflow-hidden">
       
-      {/* THE TOGGLE IS BACK */}
-      <ThemeToggle />
-      
-      <header className="relative min-h-[90vh] flex flex-col justify-center pt-20 z-10 px-6 md:px-12" aria-label="Introduction">
-        <div className="max-w-5xl mx-auto w-full">
-          <motion.div initial="hidden" animate="visible" variants={stagger}>
+      {/* 1. HERO SECTION */}
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div initial="hidden" animate="visible" variants={fadeInUp} className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-light)] bg-[var(--bg-surface)] text-xs font-semibold tracking-wide text-[var(--text-body)] mb-8 shadow-[var(--shadow-micro)]">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Available for Engineering Roles
+            </div>
             
-            <motion.div variants={springUp} className="flex flex-wrap items-center gap-4 mb-8">
-              <StatusBadge status={personalInfo.availability} />
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--border-ui)] bg-[var(--card-bg)] shadow-[var(--shadow-base)] text-xs font-mono text-[var(--text-body)] uppercase tracking-wider">
-                <MapPin size={14} aria-hidden="true" />
-                {personalInfo.location}
-              </div>
-            </motion.div>
+            <h1 className="font-bold mb-6 text-balance">
+              <span className="block text-xl md:text-2xl text-[var(--text-muted)] font-semibold mb-3 tracking-normal uppercase">
+                {personalInfo.name}
+              </span>
+              {personalInfo.headline}
+            </h1>
             
-            <motion.h1 variants={springUp} className="font-bold tracking-tightest leading-[1.05] mb-6 text-[var(--text-display)] text-balance" style={{ fontSize: 'var(--text-fluid-h1)' }}>
-              {personalInfo.name}. <br className="hidden md:block" />
-              <span className="text-[var(--text-body)]">{personalInfo.title}</span>
-            </motion.h1>
-            
-            <motion.p variants={springUp} className="text-[var(--text-body)] mb-10 max-w-2xl leading-relaxed text-balance" style={{ fontSize: 'var(--text-fluid-p)' }}>
-              {personalInfo.description}
-            </motion.p>
-            
-            <motion.div variants={springUp} className="flex flex-wrap items-center gap-4">
-              <MagneticButton href="#architecture" className="group px-7 py-3.5 bg-[var(--text-display)] text-[var(--bg-base)] font-semibold rounded-full shadow-[var(--shadow-elevated)] hover:scale-[1.02] transition-transform">
-                Explore Architecture
-                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-              </MagneticButton>
-              <MagneticButton href={personalInfo.resumeLink} download className="px-7 py-3.5 border border-[var(--border-ui)] bg-[var(--card-bg)] text-[var(--text-display)] font-semibold rounded-full hover:bg-[var(--card-hover)] transition-colors">
-                <FileText size={18} className="mr-2 text-[var(--text-body)]" aria-hidden="true" /> 
-                Download Resume
-              </MagneticButton>
-            </motion.div>
-            
+            <p className="text-lg md:text-xl text-[var(--text-body)] mb-10 text-balance max-w-prose">
+              {personalInfo.subhead}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4">
+              <a href="#projects" className="px-7 py-3.5 bg-[var(--accent-primary)] text-white font-semibold rounded-lg shadow-[var(--shadow-elevated)] hover:opacity-90 transition-opacity">
+                View Architecture
+              </a>
+              <a href={personalInfo.resumeLink} download className="flex items-center gap-2 px-7 py-3.5 border border-[var(--border-light)] bg-[var(--bg-surface)] text-[var(--text-display)] font-semibold rounded-lg shadow-[var(--shadow-micro)] hover:border-[var(--text-body)] transition-colors">
+                <FileText size={18} className="text-[var(--text-muted)]" /> Resume
+              </a>
+              <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="p-3.5 border border-[var(--border-light)] bg-[var(--bg-surface)] rounded-lg shadow-[var(--shadow-micro)] text-[var(--text-body)] hover:text-[var(--accent-primary)] transition-colors">
+                <Github size={20} />
+              </a>
+            </div>
           </motion.div>
         </div>
-      </header>
+      </section>
 
-      <section id="architecture" className="py-32 relative z-10 px-6 md:px-12" aria-label="Deployed Architecture">
+      {/* 2. ENGINEERING IDENTITY */}
+      <section className="relative py-24 px-6 z-10">
+        <div className="absolute inset-0 bg-[var(--bg-surface)] -skew-y-3 -z-10 border-y border-[var(--border-light)] shadow-[var(--shadow-micro)]" />
+        
         <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} className="mb-12">
-            <h2 className="font-bold tracking-tight text-[var(--text-display)] mb-2" style={{ fontSize: 'calc(var(--text-fluid-h1) * 0.6)' }}>Deployed Architecture</h2>
-            <p className="text-[var(--text-body)] font-medium text-lg">Production-ready systems engineered for scale.</p>
-          </motion.div>
+          {/* MICRO-POLISH: Tighter editorial rhythm */}
+          <h4 className="mb-10">Core Engineering Focus</h4>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            {projects.map((proj, i) => {
-              const Icon = proj.icon;
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {engineeringFocus.map((item, idx) => {
+              const Icon = item.icon;
               return (
-                <motion.article 
-                  key={proj.id} 
-                  aria-labelledby={`title-${proj.id}`}
-                  initial={{ opacity: 0, y: 30 }} 
-                  whileInView={{ opacity: 1, y: 0 }} 
-                  viewport={{ once: true, margin: "-50px" }} 
-                  transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }} 
-                  className={proj.colSpan}
-                >
-                  <SpotlightCard className="h-full">
-                    <div className="flex justify-between items-start mb-8">
-                      <div className="p-3 rounded-xl bg-[var(--bg-base)] border border-[var(--border-ui)] text-[var(--text-display)] shadow-[var(--shadow-base)]">
-                        <Icon size={24} strokeWidth={1.5} aria-hidden="true" />
-                      </div>
-                      <div className="flex gap-2">
-                        {proj.github && (
-                           <a href={proj.github} target="_blank" rel="noreferrer" aria-label={`View ${proj.title} on GitHub`} className="p-2 text-[var(--text-body)] hover:text-[var(--text-display)] transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]">
-                             <Github size={20} aria-hidden="true" />
-                           </a>
-                        )}
-                        <a href="#" aria-label={`View deployment of ${proj.title}`} className="p-2 text-[var(--text-body)] hover:text-[var(--text-display)] transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]">
-                          <ExternalLink size={20} aria-hidden="true" />
-                        </a>
-                      </div>
-                    </div>
-                    
-                    <h3 id={`title-${proj.id}`} className="text-2xl font-bold mb-1 text-[var(--text-display)] tracking-tight">{proj.title}</h3>
-                    <p className="text-sm font-semibold text-[var(--accent-primary)] mb-5">{proj.subtitle}</p>
-                    <p className="text-[var(--text-body)] mb-8 leading-relaxed text-base">{proj.desc}</p>
-
-                    <div className="flex flex-wrap gap-2 mt-auto pt-6 border-t border-[var(--border-ui)]" aria-label={`Technologies used in ${proj.title}`}>
-                      {proj.tech.map(tech => <TechPill key={tech}>{tech}</TechPill>)}
-                    </div>
-                  </SpotlightCard>
-                </motion.article>
+                <div key={idx} className="bg-[var(--bg-main)] p-6 rounded-xl border border-[var(--border-light)] shadow-[var(--shadow-elevated)] hover:border-[var(--accent-primary)] transition-colors duration-300">
+                  <div className="w-10 h-10 rounded-lg bg-[var(--accent-muted)] flex items-center justify-center mb-6">
+                    <Icon size={20} className="text-[var(--accent-primary)]" />
+                  </div>
+                  <h3 className="mb-3">{item.title}</h3>
+                  <p className="text-sm text-[var(--text-body)] max-w-prose">{item.desc}</p>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
+
+      {/* 3. SELECTED PROJECTS */}
+      <section id="projects" className="py-24 md:py-32 px-6">
+        <div className="max-w-5xl mx-auto">
+          {/* MICRO-POLISH: Tighter rhythm */}
+          <h4 className="mb-10">Production Case Studies</h4>
+          
+          <div className="space-y-20">
+            {projects.map((proj) => (
+              <article key={proj.id} className="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border-light)] shadow-[var(--shadow-micro)] overflow-hidden mt-16 first:mt-0">
+                <div className="grid grid-cols-1 lg:grid-cols-12">
+                  
+                  {/* Left Column */}
+                  <div className="lg:col-span-4 p-8 border-b lg:border-b-0 lg:border-r border-[var(--border-light)] bg-[var(--bg-main)]">
+                    <h3 className="mb-2 text-2xl">{proj.title}</h3>
+                    <p className="text-[var(--text-muted)] font-semibold text-sm mb-8">{proj.summary}</p>
+                    
+                    <div className="flex flex-col gap-4 mb-8">
+                      <a href={proj.liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--accent-primary)] text-white text-sm font-semibold rounded-md hover:opacity-90 transition-opacity w-full shadow-[var(--shadow-elevated)]">
+                        Live System <ArrowUpRight size={16} />
+                      </a>
+
+                      <a href={proj.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-4 py-2.5 border border-[var(--border-light)] bg-[var(--bg-surface)] text-[var(--text-display)] text-sm font-semibold rounded-md hover:bg-[var(--bg-accent)] transition-colors w-full shadow-[var(--shadow-micro)]">
+                        <Github size={16} /> View Source
+                      </a>
+                    </div>
+
+                    {/* MICRO-POLISH: Tech Tags Micro-Depth */}
+                    <div className="flex flex-wrap gap-2">
+                      {proj.tech.map(tech => (
+                        <span key={tech} className="px-2.5 py-1 bg-[var(--bg-surface)] border border-[var(--border-light)] text-[var(--text-muted)] text-xs rounded font-mono shadow-[var(--shadow-micro)]">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="lg:col-span-8 p-8 md:p-10 space-y-8 md:space-y-10">
+                    <div>
+                      <h4 className="mb-3 flex items-center gap-2">
+                        <Activity size={16} className="text-[var(--text-muted)]"/> The Problem
+                      </h4>
+                      <p className="text-sm text-[var(--text-body)] max-w-prose leading-relaxed">{proj.problem}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div>
+                        <h4 className="mb-3 flex items-center gap-2">
+                           <Terminal size={16} className="text-[var(--text-muted)]"/> Engineering Challenges
+                        </h4>
+                        <ul className="senior-list text-sm text-[var(--text-body)] max-w-prose">
+                          {proj.challenges.map((challenge, i) => (
+                            <li key={i}>{challenge}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      <div>
+                        <h4 className="mb-3 flex items-center gap-2">
+                           <Database size={16} className="text-[var(--text-muted)]"/> Technical Decisions
+                        </h4>
+                        <ul className="senior-list text-sm text-[var(--text-body)] max-w-prose">
+                          {proj.decisions.map((decision, i) => (
+                            <li key={i}>{decision}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* MICRO-POLISH: Impact Panel Presence Boost */}
+                    <div className="p-6 md:p-8 rounded-xl border border-[var(--accent-primary)] border-opacity-20 bg-gradient-to-b from-[var(--accent-muted)] to-transparent backdrop-blur-sm">
+                      <h4 className="mb-4 text-[var(--accent-primary)]">Engineering Impact</h4>
+                      <ul className="space-y-3">
+                        {proj.impact.map((metric, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <CheckCircle2 size={18} className="text-[var(--accent-primary)] shrink-0 mt-0.5" />
+                            <span className="font-semibold text-[15px] text-[var(--text-display)] max-w-prose leading-relaxed">
+                              {metric}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. SKILLS */}
+      <section className="py-24 px-6 border-t border-[var(--border-light)] bg-[var(--bg-surface)]">
+        <div className="max-w-5xl mx-auto">
+          {/* MICRO-POLISH: Tighter rhythm */}
+          <h4 className="mb-10">Technical Capability Signal</h4>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="mb-4 text-xl">System Architecture</h3>
+              <ul className="space-y-2 text-[var(--text-body)] text-sm">
+                {skills.core.map(skill => <li key={skill}>{skill}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-4 text-xl">Engineering Stack</h3>
+              <ul className="space-y-2 text-[var(--text-body)] text-sm">
+                {skills.tech.map(skill => <li key={skill}>{skill}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-4 text-xl">Engineering Environment</h3>
+              <ul className="space-y-2 text-[var(--text-body)] text-sm">
+                {skills.tools.map(skill => <li key={skill}>{skill}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }
